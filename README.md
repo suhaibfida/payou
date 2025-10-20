@@ -1,1 +1,1 @@
-<h1>💳 Payer App</h1>
+<h1>💳 Payou App</h1>
