@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import user from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import { z } from "zod";
+import jwt from "jsonwebtoken";
 interface SignupBody {
   username: string;
   email: string;
@@ -10,7 +11,7 @@ interface SignupBody {
 export const signup = async (req: Request, res: Response) => {
   const schema = z.object({
     username: z.string().min(8).max(20),
-    email: z.string().min(8).max(50),
+    email: z.string().trim().toLowerCase().email().trim().toLowerCase(),
     password: z.string().min(8).max(50),
   });
   const safeParse = schema.safeParse(req.body);
@@ -49,6 +50,48 @@ export const signup = async (req: Request, res: Response) => {
     console.log("Signup error");
     res.status(500).json({
       error: "Internal server error",
+    });
+  }
+};
+
+export const login = async (req: Request, res: Response) => {
+  const schema = z.object({
+    email: z.string().min(3).max(20),
+    password: z.string().min(8),
+  });
+  const safeParse = schema.safeParse(req.body);
+  if (!safeParse.success) {
+    return res.json("Credentials invalid");
+  }
+  try {
+    const { email, password } = safeParse.data;
+    const User = await user.findOne({
+      email,
+    });
+    if (
+      !User ||
+      !User.password ||
+      !(await bcrypt.compare(password, User.password))
+    ) {
+      return res.json({
+        message: "Invalid credentials",
+      });
+    }
+
+    const secretKey = process.env.SECRETKEY;
+    if (!secretKey) {
+      return console.log("key is missing");
+    }
+
+    const token = jwt.sign({ userId: User._id }, secretKey);
+    return res.status(200).json({
+      message: "successfully created",
+      token,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "something went wrong",
     });
   }
 };
