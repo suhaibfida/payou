@@ -11,7 +11,7 @@ interface SignupBody {
 export const signup = async (req: Request, res: Response) => {
   const schema = z.object({
     username: z.string().min(8).max(20),
-    email: z.string().trim().toLowerCase().email().trim().toLowerCase(),
+    email: z.string().trim().toLowerCase(),
     password: z.string().min(8).max(50),
   });
   const safeParse = schema.safeParse(req.body);
@@ -23,11 +23,10 @@ export const signup = async (req: Request, res: Response) => {
     });
     return;
   }
-  const { username, email, password }: SignupBody = req.body;
 
   try {
     const check = await user.findOne({
-      email: email,
+      email: safeParse.data.email,
     });
     if (check) {
       res.status(409).json({
@@ -36,10 +35,10 @@ export const signup = async (req: Request, res: Response) => {
       return;
     }
     const salt = 6;
-    const hashedPassword = await bcrypt.hash(password, salt);
-    const create = await user.create({
-      username: username,
-      email: email,
+    const hashedPassword = await bcrypt.hash(safeParse.data.password, salt);
+    await user.create({
+      username: safeParse.data.username,
+      email: safeParse.data.email,
       password: hashedPassword,
     });
     res.status(201).json({
@@ -61,17 +60,16 @@ export const login = async (req: Request, res: Response) => {
   });
   const safeParse = schema.safeParse(req.body);
   if (!safeParse.success) {
-    return res.json("Credentials invalid");
+    return res.json("Incorrect format");
   }
   try {
-    const { email, password } = safeParse.data;
     const User = await user.findOne({
-      email,
+      email: safeParse.data.email,
     });
     if (
       !User ||
       !User.password ||
-      !(await bcrypt.compare(password, User.password))
+      !(await bcrypt.compare(safeParse.data.password, User.password))
     ) {
       return res.json({
         message: "Invalid credentials",
@@ -86,6 +84,9 @@ export const login = async (req: Request, res: Response) => {
     const token = jwt.sign({ userId: User._id }, secretKey);
     return res.status(200).json({
       message: "successfully created",
+      user: {
+        Email: safeParse.data.email,
+      },
       token,
     });
   } catch (error) {
