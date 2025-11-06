@@ -1,8 +1,10 @@
+import express from "express";
 import type { Request, Response } from "express";
 import user from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import { z } from "zod";
 import jwt from "jsonwebtoken";
+
 interface SignupBody {
   username: string;
   email: string;
@@ -81,7 +83,15 @@ export const login = async (req: Request, res: Response) => {
       return console.log("key is missing");
     }
 
-    const token = jwt.sign({ userId: User._id }, secretKey);
+    const token = jwt.sign({ userId: User._id }, secretKey, {
+      expiresIn: "7d",
+    });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "PRODUCTION",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24 * 7 * 1000,
+    });
     return res.status(200).json({
       message: "successfully created",
       user: {
