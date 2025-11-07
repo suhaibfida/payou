@@ -19,11 +19,10 @@ export const signup = async (req: Request, res: Response) => {
   const safeParse = schema.safeParse(req.body);
   if (!safeParse.success) {
     console.log("zod validation failed:", safeParse.error.issues);
-    res.status(400).json({
+    return res.status(400).json({
       message: "Incorrect format",
       error: safeParse.error.issues,
     });
-    return;
   }
 
   try {

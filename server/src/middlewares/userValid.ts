@@ -5,7 +5,7 @@ const key = process.env.SECRETKEY;
 export interface AuthRequest extends Request {
   userID?: Types.ObjectId;
 }
-const middleware = async (
+export const userValid = async (
   req: AuthRequest,
   res: Response,
   next: NextFunction
