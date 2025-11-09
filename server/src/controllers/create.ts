@@ -64,3 +64,27 @@ export const update = async (req: AuthRequest, res: Response) => {
     });
   }
 };
+export const find = async (req: AuthRequest, res: Response) => {
+  const filter = req.query.filter || "";
+
+  const users = await user.find({
+    // we did extra work here to check firstName and lastname otherwise username is enough
+    // $or: [
+    //   {
+    //     firstName: { $regex: filter },
+    //   },
+    //   {
+    //     lastName: {
+    //       $regex: filter,
+    //     },
+    //   },
+    // ],
+    username: { $regex: filter, $options: "i" },
+  });
+  res.json({
+    user: users.map((user) => ({
+      username: user.username,
+      _id: user._id,
+    })),
+  });
+};
