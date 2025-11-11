@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { z } from "zod";
-import user from "../models/userModel.js";
+import { User } from "../models/userModel.js";
 import type { AuthRequest } from "./../middlewares/userValid.js";
 interface update {
   firstName: string;
@@ -46,7 +46,7 @@ export const update = async (req: AuthRequest, res: Response) => {
         message: "Unauthorized",
       });
     }
-    const update = await user.updateOne(
+    const update = await User.updateOne(
       { _id: req.userID },
       { $set: data },
       { runValidators: true }
@@ -67,7 +67,7 @@ export const update = async (req: AuthRequest, res: Response) => {
 export const find = async (req: AuthRequest, res: Response) => {
   const filter = req.query.filter || "";
 
-  const users = await user.find({
+  const users = await User.find({
     // we did extra work here to check firstName and lastname otherwise username is enough
     // $or: [
     //   {

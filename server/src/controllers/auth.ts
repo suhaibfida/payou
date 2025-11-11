@@ -1,6 +1,6 @@
 import express from "express";
 import type { Request, Response } from "express";
-import user from "../models/userModel.js";
+import { User, Account } from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import { z } from "zod";
 import jwt from "jsonwebtoken";
@@ -26,7 +26,7 @@ export const signup = async (req: Request, res: Response) => {
   }
 
   try {
-    const check = await user.findOne({
+    const check = await User.findOne({
       email: safeParse.data.email,
     });
     if (check) {
@@ -37,11 +37,16 @@ export const signup = async (req: Request, res: Response) => {
     }
     const salt = 6;
     const hashedPassword = await bcrypt.hash(safeParse.data.password, salt);
-    await user.create({
+    const user = await User.create({
       username: safeParse.data.username,
       email: safeParse.data.email,
       password: hashedPassword,
     });
+    await Account.create({
+      userId: user._id,
+      balance: 1 + Math.random() * 10000,
+    });
+
     res.status(201).json({
       message: "User created successfully",
     });
@@ -64,13 +69,13 @@ export const login = async (req: Request, res: Response) => {
     return res.json("Incorrect format");
   }
   try {
-    const User = await user.findOne({
+    const Users = await User.findOne({
       email: safeParse.data.email,
     });
     if (
-      !User ||
-      !User.password ||
-      !(await bcrypt.compare(safeParse.data.password, User.password))
+      !Users ||
+      !Users.password ||
+      !(await bcrypt.compare(safeParse.data.password, Users.password))
     ) {
       return res.json({
         message: "Invalid credentials",
@@ -82,7 +87,7 @@ export const login = async (req: Request, res: Response) => {
       return console.log("key is missing");
     }
 
-    const token = jwt.sign({ userId: User._id }, secretKey, {
+    const token = jwt.sign({ userId: Users._id }, secretKey, {
       expiresIn: "7d",
     });
     res.cookie("token", token, {
