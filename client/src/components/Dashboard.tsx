@@ -1,4 +1,4 @@
 const Dashboard = () => {
-  return <div></div>;
+  return <div>Homne page</div>;
 };
 export default Dashboard;
