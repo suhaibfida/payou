@@ -1,6 +1,7 @@
 import dash from "./images/dash.png";
 import Navbar from "./Navbar.js";
 import Input from "./Input.js";
+import User from "./User.js";
 const Dashboard = () => {
   return (
     <div>
@@ -15,7 +16,7 @@ const Dashboard = () => {
           Your balance is $4730.3
         </div>
         <div className="flex flex-1 items-center justify-center">
-          <div className="w-110 h-130 backdrop-blur-xl bg-white/20 bg-gray-500 border border-xl rounded-xl">
+          <div className="w-110 h-130 backdrop-blur-xl bg-white/20 bg-gray-500 border border-green-700 rounded-xl">
             <div className="text-3xl text-center text-2xl text-green-700 font-extrabold p-6">
               Transfer
             </div>
@@ -24,6 +25,10 @@ const Dashboard = () => {
             </div>
             <div className="flex justify-center">
               <Input placeholder={"Search....."} type={"text"} />
+            </div>
+            <div>
+              <User />
+              <User />
             </div>
           </div>
         </div>
