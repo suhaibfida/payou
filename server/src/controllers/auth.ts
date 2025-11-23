@@ -82,7 +82,7 @@ export const login = async (req: Request, res: Response) => {
       });
     }
 
-    const secretKey = process.env.SECRETKEY;
+    const secretKey = process.env.SECRETKEY || "jsonwebtoken";
     if (!secretKey) {
       return console.log("key is missing");
     }

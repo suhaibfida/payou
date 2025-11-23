@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import { Types } from "mongoose";
 import jwt from "jsonwebtoken";
-const key = process.env.SECRETKEY;
+const key = process.env.SECRETKEY || "jsonwebtoken";
 export interface AuthRequest extends Request {
   userID?: Types.ObjectId;
 }
@@ -31,7 +31,7 @@ export const userValid = async (
 
     next();
   } catch (error) {
-    console.log("error");
+    console.log("error" + error);
     return res.status(500).json({
       message: "server error",
     });

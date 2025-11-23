@@ -1,0 +1,1 @@
+{"root":["./src/app.ts","./src/config/db.ts","./src/controllers/account.ts","./src/controllers/auth.ts","./src/controllers/create.ts","./src/middlewares/uservalid.ts","./src/models/usermodel.ts","./src/routes/pageroutes.ts"],"version":"5.9.3"}

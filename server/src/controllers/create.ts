@@ -3,19 +3,19 @@ import { z } from "zod";
 import { User } from "../models/userModel.js";
 import type { AuthRequest } from "./../middlewares/userValid.js";
 interface update {
-  firstName: string;
-  lastName: string;
+  username: string;
+  email: string;
   password: string;
 }
 export const update = async (req: AuthRequest, res: Response) => {
   const schema = z.object({
-    firstName: z
+    username: z
       .string()
       .min(3)
       .max(15)
       .optional()
       .transform((v) => (v?.trim() === "" ? undefined : v?.trim())),
-    lastName: z
+    email: z
       .string()
       .optional()
       .transform((v) => (v?.trim() === "" ? undefined : v?.trim())),
