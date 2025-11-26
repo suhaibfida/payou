@@ -2,7 +2,11 @@ import SignupBg from "./images/log.png";
 import Input from "./Input.js";
 import Button from "./Button.js";
 import PayouLogo from "./icons/Payou.js";
+import { useState } from "react";
 const SignUp = () => {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   return (
     <div
       className="min-h-screen bg-cover bg-center bg-no-repeat"
@@ -17,12 +21,35 @@ const SignUp = () => {
             Register
           </div>
           <div className="text-gray-300 text-bold text-lg">Username</div>
-          <div>{<Input placeholder={"Username"} type={"text"} />}</div>
+          <div>
+            {
+              <Input
+                placeholder={"Username"}
+                type={"text"}
+                value={username}
+                onChange={setUsername}
+              />
+            }
+          </div>
           <div className="text-gray-300 text-bold text-lg">Email</div>
-          <div>{<Input placeholder={"Email"} type={"email"} />}</div>
+          <div>
+            {
+              <Input
+                placeholder={"Email"}
+                type={"email"}
+                value={email}
+                onChange={setEmail}
+              />
+            }
+          </div>
           <div className="text-gray-300 text-bold text-lg">Password</div>
           <div>
-            <Input placeholder={"Password"} type={"password"} />
+            <Input
+              placeholder={"Password"}
+              type={"password"}
+              value={password}
+              onChange={setPassword}
+            />
           </div>
           <div>
             <Button text={"SignUp"} />
