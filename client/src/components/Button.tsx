@@ -1,5 +1,6 @@
 interface props {
   text: string;
+  onClick: (value: string) => void;
 }
 
 export const Button = ({ text }: props) => {

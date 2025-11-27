@@ -52,7 +52,7 @@ const SignUp = () => {
             />
           </div>
           <div>
-            <Button text={"SignUp"} />
+            <Button text={"SignUp"} onClick={handleSubmit} />
           </div>
           <div className="text-center text-green-300">
             Already have an account?
@@ -61,5 +61,22 @@ const SignUp = () => {
       </div>
     </div>
   );
+
+  async function handleSubmit() {
+    const data = {
+      username,
+      email,
+      password,
+    };
+    await fetch("http://localhost:5000/api/v1/register", {
+      method: "POST",
+      headers: {
+        "content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(data),
+    });
+  }
 };
+
 export default SignUp;
