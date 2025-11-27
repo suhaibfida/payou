@@ -3,10 +3,12 @@ import Input from "./Input.js";
 import Button from "./Button.js";
 import PayouLogo from "./icons/Payou.js";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 const SignUp = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [submit, setSubmit] = useState("Signup");
   return (
     <div
       className="min-h-screen bg-cover bg-center bg-no-repeat"
@@ -52,10 +54,16 @@ const SignUp = () => {
             />
           </div>
           <div>
-            <Button text={"SignUp"} onClick={handleSubmit} />
+            <Button
+              text={submit}
+              onClick={() => {
+                setSubmit("Signing up");
+                handleSubmit();
+              }}
+            />
           </div>
           <div className="text-center text-green-300">
-            Already have an account?
+            <Link to="/login">Already have an account?</Link>
           </div>
         </div>
       </div>
@@ -63,20 +71,37 @@ const SignUp = () => {
   );
 
   async function handleSubmit() {
-    const data = {
-      username,
-      email,
-      password,
-    };
-    await fetch("http://localhost:5000/api/v1/register", {
-      method: "POST",
-      headers: {
-        "content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify(data),
-    });
+    if (!username || !email || !password) {
+      alert("Please enter details");
+      return;
+    }
+    try {
+      const data = {
+        username,
+        email,
+        password,
+      };
+      const res = await fetch("http://localhost:5000/api/v1/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(data),
+      });
+      const body = await res.json().catch(() => ({}));
+      const msg = body?.message || `server responded with ${res.status}`;
+      if (!res.ok) {
+        alert(msg);
+        return;
+      }
+      alert("account created successfully");
+
+      return;
+    } catch (err) {
+      alert("error while sending data");
+      console.log(err);
+    }
   }
 };
-
 export default SignUp;
