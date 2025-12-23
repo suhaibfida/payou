@@ -36,7 +36,7 @@ const Login = () => {
             <Input
               placeholder={"Password"}
               type={"password"}
-              value={username}
+              value={password}
               onChange={setPassword}
             />
           </div>
@@ -59,6 +59,28 @@ const Login = () => {
     if (!username || !password) {
       alert("please enter details");
       return;
+    }
+    try {
+      const data = {
+        username,
+        password,
+      };
+      const res = await fetch("http://localhost:3000/api/v1/login", {
+        method: "POST",
+        headers: { "content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(data),
+      });
+      const body = await res.json().catch(() => ({}));
+
+      const message = body?.message || `server responded with ${res.status}`;
+      if (!res.ok) {
+        alert(message);
+        return;
+      }
+      alert("login successfully");
+    } catch (err) {
+      alert(err);
     }
   }
 };

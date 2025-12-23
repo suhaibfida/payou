@@ -81,7 +81,7 @@ const SignUp = () => {
         email,
         password,
       };
-      const res = await fetch("http://localhost:5000/api/v1/register", {
+      const res = await fetch("http://localhost:3000/api/v1/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -101,6 +101,7 @@ const SignUp = () => {
     } catch (err) {
       alert("error while sending data");
       console.log(err);
+      alert(err);
     }
   }
 };
