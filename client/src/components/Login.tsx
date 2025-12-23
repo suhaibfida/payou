@@ -2,7 +2,10 @@ import SignupBg from "./images/log.png";
 import Input from "./Input.js";
 import Button from "./Button.js";
 import PayouLogo from "./icons/Payou.js";
+import { useState } from "react";
 const Login = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   return (
     <div
       className="min-h-screen bg-cover bg-center bg-no-repeat"
@@ -17,14 +20,33 @@ const Login = () => {
             Login
           </div>
           <div className="text-gray-300 text-bold text-lg">Username</div>
-          <div>{<Input placeholder={"Username"} type={"text"} />}</div>
+          <div>
+            {
+              <Input
+                placeholder={"Username"}
+                type={"text"}
+                value={username}
+                onChange={setUsername}
+              />
+            }
+          </div>
 
           <div className="text-gray-300 text-bold text-lg">Password</div>
           <div>
-            <Input placeholder={"Password"} type={"password"} />
+            <Input
+              placeholder={"Password"}
+              type={"password"}
+              value={username}
+              onChange={setPassword}
+            />
           </div>
           <div>
-            <Button text={"Login"} />
+            <Button
+              text={"Login"}
+              onClick={() => {
+                handleLogin();
+              }}
+            />
           </div>
           <div className="text-center text-green-300">
             Already have an account?
@@ -33,5 +55,11 @@ const Login = () => {
       </div>
     </div>
   );
+  async function handleLogin() {
+    if (!username || !password) {
+      alert("please enter details");
+      return;
+    }
+  }
 };
 export default Login;
